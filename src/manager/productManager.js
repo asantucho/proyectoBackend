@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { __dirname } from '../path';
+import { __dirname } from '../path.js';
 
 const pathFile = __dirname + '/products.json';
 
@@ -74,10 +74,7 @@ export const updatedProductById = async (id, updatedProduct) => {
         }
         return prod;
       });
-      await fs.promises.writeFile(
-        pathFile,
-        JSON.stringify(updatedProducts, null, 2)
-      );
+      await fs.promises.writeFile(pathFile, JSON.stringify(updatedProducts));
       return product;
     } else {
       return null;

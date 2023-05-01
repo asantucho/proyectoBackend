@@ -5,7 +5,8 @@ import {
   getProducts,
   getProductsById,
   updatedProductById,
-} from '../manager/productManager';
+} from '../manager/productManager.js';
+import { productValidator } from '../middleware/productValidator.js';
 
 const router = Router();
 
@@ -34,7 +35,7 @@ router.get('/:prodId', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', productValidator, async (req, res) => {
   try {
     const product = req.body;
     const newProduct = await createProduct(product);
