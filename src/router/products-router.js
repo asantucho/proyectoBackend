@@ -35,7 +35,7 @@ router.get('/:prodId', async (req, res) => {
   }
 });
 
-router.post('/', productValidator, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const product = req.body;
     const newProduct = await createProduct(product);

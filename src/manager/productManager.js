@@ -5,10 +5,10 @@ const pathFile = __dirname + '/products.json';
 
 export const createProduct = async (product) => {
   try {
-    const newId = await newId();
+    const latestId = await newId();
     const newProduct = {
       ...product,
-      id: newId + 1,
+      id: latestId + 1,
     };
     const productsFile = await getProducts();
     productsFile.push(newProduct);
@@ -86,11 +86,11 @@ export const updatedProductById = async (id, updatedProduct) => {
 
 export const deleteProductById = async (id) => {
   try {
-    const products = await fs.promises.readFile(this.path, 'utf-8');
+    const products = await fs.promises.readFile(pathFile, 'utf-8');
     const productsJs = JSON.parse(products);
     const deletedProduct = productsJs.find((product) => product.id === id);
     const remainingProducts = productsJs.filter((product) => product.id !== id);
-    await fs.promises.writeFile(this.path, JSON.stringify(remainingProducts));
+    await fs.promises.writeFile(pathFile, JSON.stringify(remainingProducts));
     return deletedProduct;
   } catch (error) {
     console.log(error);
