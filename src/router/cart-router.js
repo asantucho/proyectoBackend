@@ -49,12 +49,11 @@ cartRouter.post('/', async (req, res) => {
 
 cartRouter.post('/:cartId/products/:prodId', async (req, res) => {
   try {
-    const { cartId } = req.params;
-    const { prodId } = req.params;
+    const { cartId, prodId } = req.params;
     const selectedCart = await getCartById(Number(cartId));
     const selectedProduct = await getProductsById(Number(prodId));
     if (selectedCart) {
-      await addToCart(selectedProduct, selectedCart);
+      await addToCart(selectedProduct.id, selectedCart.id);
     }
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -80,8 +79,7 @@ cartRouter.delete('/:cartId', async (req, res) => {
 
 cartRouter.delete('/:cartId/products/:prodId', async (req, res) => {
   try {
-    const { cartId } = req.params;
-    const { prodId } = req.params;
+    const { cartId, prodId } = req.params;
     const selectedCart = await getCartById(Number(cartId));
     const selectedProduct = await getProductsById(Number(prodId));
     if (selectedCart) {

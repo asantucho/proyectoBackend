@@ -72,7 +72,7 @@ export const addToCart = async (prodId, cartId) => {
             (product) => product.id === selectedProduct.id
           );
           if (!productToAdd) {
-            selectedCart.push({ id: selectedProduct.id, quantity: 1 });
+            selectedCart.products.push({ id: selectedProduct.id, quantity: 1 });
           } else {
             productToAdd.quantity++;
           }
