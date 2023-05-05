@@ -67,17 +67,18 @@ export const addToCart = async (prodId, cartId) => {
       if (selectedCart) {
         if (!selectedProduct) {
           console.log('product not found');
-        }
-        const productToAdd = selectedCart.products.find(
-          (product) => product.id === selectedProduct.id
-        );
-        if (!productToAdd) {
-          selectedCart.push({ id: selectedProduct.id, quantity: 1 });
         } else {
-          productToAdd.quantity++;
+          const productToAdd = selectedCart.products.find(
+            (product) => product.id === selectedProduct.id
+          );
+          if (!productToAdd) {
+            selectedCart.push({ id: selectedProduct.id, quantity: 1 });
+          } else {
+            productToAdd.quantity++;
+          }
+          await fs.promises.writeFile(pathFile, JSON.stringify(cartsJs));
+          console.log('Product added to cart successfully');
         }
-        await fs.promises.writeFile(pathFile, JSON.stringify(cartsJs));
-        console.log('Product added to cart successfully');
       } else {
         return null;
       }

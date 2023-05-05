@@ -11,9 +11,11 @@ import { productValidator } from '../middleware/productValidator.js';
 const router = Router();
 
 router.get('/', async (req, res) => {
+  const limit = req.query.limit ? parseInt(req.query.limit) : null;
   try {
-    const products = await getProducts();
-    res.status(200).json(products);
+    const products = await productManager.getProducts(limit);
+    const limitedProducts = limit ? products.slice(0, limit) : products;
+    res.status(200).json(limitedProducts);
   } catch (error) {
     res.status(404).json({ message: error.message });
     console.log(error);
@@ -35,7 +37,7 @@ router.get('/:prodId', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', productValidator, async (req, res) => {
   try {
     const product = req.body;
     const newProduct = await createProduct(product);

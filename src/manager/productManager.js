@@ -27,12 +27,16 @@ export const newId = async () => {
   return initialId;
 };
 
-export const getProducts = async () => {
+export const getProducts = async (limit = null) => {
   try {
     if (fs.existsSync(pathFile)) {
       const products = await fs.promises.readFile(pathFile, 'utf-8');
       const productsJs = JSON.parse(products);
-      return productsJs;
+      if (limit) {
+        return productsJs.slice(0, limit);
+      } else {
+        return productsJs;
+      }
     } else {
       return [];
     }
