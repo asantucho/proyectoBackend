@@ -13,7 +13,7 @@ const router = Router();
 router.get('/', async (req, res) => {
   const limit = req.query.limit ? parseInt(req.query.limit) : null;
   try {
-    const products = await productManager.getProducts(limit);
+    const products = await getProducts(limit);
     const limitedProducts = limit ? products.slice(0, limit) : products;
     res.status(200).json(limitedProducts);
   } catch (error) {
