@@ -88,6 +88,8 @@ export const addToCart = async (prodId, cartId) => {
   }
 };
 
+// se que eliminar un producto del carrito no se pedía en la entrega pero igual traté de hacerlo
+
 export const removeFromCart = async (prodId, cartId) => {
   try {
     if (fs.existsSync(pathFile)) {
@@ -95,13 +97,22 @@ export const removeFromCart = async (prodId, cartId) => {
       const cartsJs = JSON.parse(carts);
       const selectedCart = cartsJs.find((cart) => cart.id === cartId);
       const selectedProduct = await getProductsById(prodId);
-      const remainingProducts = selectedCart.filter(
-        (product) => product.id !== selectedProduct.id
-      );
-      await fs.promises.writeFile(pathFile, JSON.stringify(remainingProducts));
-      return selectedProduct;
-    } else {
-      console.log('the product is not in the cart to be deleted');
+      if (selectedCart) {
+        if (selectedProduct.quantity === 1) {
+          const remainingProducts = selectedCart.products.filter(
+            (product) => product.id !== selectedProduct.id
+          );
+          await fs.promises.writeFile(
+            pathFile,
+            JSON.stringify(remainingProducts)
+          );
+          return selectedProduct;
+        } else if (selectedProduct.quantity > 1) {
+          selectedProduct.quantity--;
+        } else {
+          console.log('the product is not in the cart to be deleted');
+        }
+      }
     }
   } catch (error) {
     console.log(error);

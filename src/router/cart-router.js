@@ -54,6 +54,7 @@ cartRouter.post('/:cartId/products/:prodId', async (req, res) => {
     const selectedProduct = await getProductsById(Number(prodId));
     if (selectedCart) {
       await addToCart(selectedProduct.id, selectedCart.id);
+      res.status(200).send(`product with id ${prodId} was added successfully`);
     }
   } catch (error) {
     res.status(404).json({ message: error.message });
