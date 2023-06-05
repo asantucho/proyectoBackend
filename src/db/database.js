@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const connectionString =
-  'mongodb+srv://masantucho:masantucho@cluster0.noyiw8q.mongodb.net/desafio';
+  'mongodb+srv://masantucho:masantucho@cluster0.noyiw8q.mongodb.net/proyecto-final';
 
 try {
   await mongoose.connect(connectionString);
@@ -9,12 +9,3 @@ try {
 } catch (error) {
   console.log(error);
 }
-
-// export const disconnectMongoDB = async () => {
-//   try {
-//     await mongoose.disconnect();
-//     console.log('disconnected from MongoDB');
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
