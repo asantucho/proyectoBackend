@@ -47,23 +47,14 @@ export default class ProductsDaoMongo {
       console.log(error);
     }
   }
-  async aggregation(category) {
+  async getAllProductsByCategory(category) {
     try {
       const response = await productsModel.aggregate([
         {
           $match: { category: `${category}` },
         },
         {
-          $group: {
-            _id: '$category',
-            cheapest: { $min: '$price' },
-            mostExpensive: { $max: '$price' },
-          },
-        },
-        {
-          $sort: {
-            cheapest: 1,
-          },
+          $sort: { price: 1 },
         },
       ]);
       return response;

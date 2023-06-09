@@ -4,7 +4,7 @@ import {
   getAllProductsService,
   getProductByIdService,
   updateProductService,
-  aggregationService,
+  getAllProductsByCategoryService,
 } from '../services/products-services.js';
 import 'mongoose-paginate-v2';
 
@@ -55,6 +55,16 @@ export const getAllProductsController = async (req, res, next) => {
   }
 };
 
+export const getAllProductsByCategoryController = async (req, res, next) => {
+  try {
+    const { category } = req.params;
+    const products = await getAllProductsByCategoryService(category);
+    res.json(products);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getProductByIdController = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -95,16 +105,6 @@ export const deleteProductByIdController = async (req, res, next) => {
     const { id } = req.params;
     const deletedProduct = await deleteProductByIdService(id);
     res.json(`${deletedProduct} delected successfully!`);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const aggregationController = async (req, res, next) => {
-  try {
-    const { category } = req.params;
-    const categories = await aggregationService(category);
-    res.json(categories);
   } catch (error) {
     next(error);
   }

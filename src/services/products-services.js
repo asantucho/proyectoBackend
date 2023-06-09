@@ -21,6 +21,13 @@ export const getAllProductsService = async (page, limit) => {
   }
 };
 
+export const getAllProductsByCategoryService = async (category) => {
+  try {
+    const docs = await productMongo.getAllProductsByCategory(category);
+    return docs;
+  } catch (error) {}
+};
+
 export const getProductByIdService = async (id) => {
   try {
     const doc = await productMongo.getProductById(id);
