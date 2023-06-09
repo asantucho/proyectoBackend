@@ -4,6 +4,8 @@ import {
   getCartByIdService,
   deleteCartByIdService,
   addToCartService,
+  deleteProductFromCartService,
+  emptyCartService,
 } from '../services/carts-services.js';
 
 export const createCartController = async (req, res, next) => {
@@ -51,6 +53,26 @@ export const addToCartController = async (req, res, next) => {
     const { cartId, prodId } = req.params;
     const addedProduct = await addToCartService(cartId, prodId);
     res.json(addedProduct);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteProductFromCartController = async (req, res, next) => {
+  try {
+    const { cartId, prodId } = req.params;
+    const deletedProduct = await deleteProductFromCartService(cartId, prodId);
+    res.json(deletedProduct);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const emptyCartController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const emptyCart = await emptyCartService(id);
+    res.json(emptyCart);
   } catch (error) {
     next(error);
   }

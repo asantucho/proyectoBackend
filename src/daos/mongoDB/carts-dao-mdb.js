@@ -39,23 +39,50 @@ export default class CartsDaoMongo {
   async addToCart(cartId, prodId) {
     try {
       const cart = await cartsModel.findById(cartId);
-      console.log('aca vemos el console log de cart ' + cart);
       const productToAdd = await productsModel.findById(prodId);
-      console.log('a ver que trae el productToAdd ' + productToAdd);
       const isInCart = cart.products.find(
         (product) => product.prodId === productToAdd._id.toString()
       );
-      console.log(isInCart);
       if (!isInCart) {
         cart.products.push({ prodId, quantity: 1 });
       } else {
         isInCart.quantity++;
       }
-      console.log(isInCart);
-      console.log(cart);
       await cart.markModified('products');
       await cart.save();
       console.log('product added successfully!');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async deleteProductFromCart(cartId, prodId) {
+    try {
+      const cart = await cartsModel.findById(cartId);
+      const productToDelete = await productsModel.findById(prodId);
+      const productIndex = cart.products.findIndex(
+        (product) =>
+          product.prodId.toString() === productToDelete._id.toString()
+      );
+      if (productIndex !== -1) {
+        if (cart.products[productIndex].quantity === 1) {
+          cart.products.splice(productIndex, 1);
+        } else {
+          cart.products[productIndex].quantity--;
+        }
+        await cart.markModified('products');
+        await cart.save();
+        console.log('product deleted successfully!');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async emptyCart(id) {
+    try {
+      const cart = await cartsModel.findById(id);
+      cart.products = [];
+      await cart.save();
+      return cart;
     } catch (error) {
       console.log(error);
     }

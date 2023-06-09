@@ -47,3 +47,21 @@ export const addToCartService = async (cartId, prodId) => {
     console.log(error);
   }
 };
+
+export const deleteProductFromCartService = async (cartId, prodId) => {
+  try {
+    const deletedProduct = await carts.deleteProductFromCart(cartId, prodId);
+    return deletedProduct;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const emptyCartService = async (id) => {
+  try {
+    const emptyCart = await carts.emptyCart(id);
+    return emptyCart;
+  } catch (error) {
+    console.log(error);
+  }
+};
