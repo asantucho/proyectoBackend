@@ -31,21 +31,24 @@ export const getAllProductsController = async (req, res, next) => {
   try {
     const { page, limit } = req.params;
     const products = await getAllProductsService(page, limit);
-    const next = products.hasNextPage
-      ? `http://localhost:8080/products?page=${products.nextPage}`
+
+    const nextPage = products.hasNextPage
+      ? `http://localhost:8080/products?page=${products.nextPage}&limit=${limit}`
       : null;
-    const prev = products.hasPrevPage
-      ? `http://localhost:8080/products?page=${products.prevPage}`
+    const prevPage = products.hasPrevPage
+      ? `http://localhost:8080/products?page=${products.prevPage}&limit=${limit}`
       : null;
+
     res.json({
+      status: 'success',
+      payload: products.doc.length,
+      totalPages: products.totalPages,
+      currentPage: page,
+      hasPrevPage: products.hasPrevPage,
+      hasNextPage: products.hasNextPage,
+      prevLink: prevPage,
+      nextLink: nextPage,
       results: products.doc,
-      info: {
-        count: products.totalDocs,
-        pages: products.totalPages,
-        page: page,
-        prev,
-        next,
-      },
     });
   } catch (error) {
     next(error);
