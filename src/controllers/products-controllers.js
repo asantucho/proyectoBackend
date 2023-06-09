@@ -4,7 +4,9 @@ import {
   getAllProductsService,
   getProductByIdService,
   updateProductService,
+  aggregationService,
 } from '../services/products-services.js';
+import 'mongoose-paginate-v2';
 
 export const createProductsController = async (req, res, next) => {
   try {
@@ -27,8 +29,24 @@ export const createProductsController = async (req, res, next) => {
 
 export const getAllProductsController = async (req, res, next) => {
   try {
-    const products = await getAllProductsService();
-    res.json(products);
+    const { page, limit } = req.params;
+    const products = await getAllProductsService(page, limit);
+    const next = products.hasNextPage
+      ? `http://localhost:8080/products?page=${products.nextPage}`
+      : null;
+    const prev = products.hasPrevPage
+      ? `http://localhost:8080/products?page=${products.prevPage}`
+      : null;
+    res.json({
+      results: products.doc,
+      info: {
+        count: products.totalDocs,
+        pages: products.totalPages,
+        page: page,
+        prev,
+        next,
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -74,6 +92,16 @@ export const deleteProductByIdController = async (req, res, next) => {
     const { id } = req.params;
     const deletedProduct = await deleteProductByIdService(id);
     res.json(`${deletedProduct} delected successfully!`);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const aggregationController = async (req, res, next) => {
+  try {
+    const { category } = req.params;
+    const categories = await aggregationService(category);
+    res.json(categories);
   } catch (error) {
     next(error);
   }

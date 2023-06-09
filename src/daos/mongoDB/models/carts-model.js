@@ -4,7 +4,7 @@ const cartsCollection = 'carts';
 
 const cartsSchema = new mongoose.Schema({
   products: {
-    type: Array,
+    type: mongoose.Schema.Types.ObjectId,
     default: [],
   },
 });

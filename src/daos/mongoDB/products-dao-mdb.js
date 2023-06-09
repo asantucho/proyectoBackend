@@ -10,9 +10,9 @@ export default class ProductsDaoMongo {
       console.log(error);
     }
   }
-  async getAllProducts() {
+  async getAllProducts(page = 1, limit = 0) {
     try {
-      const response = await productsModel.find({});
+      const response = await productsModel.paginate({}, { page, limit });
       return response;
     } catch (error) {
       console.log(error);
@@ -43,6 +43,30 @@ export default class ProductsDaoMongo {
     try {
       await productsModel.findByIdAndDelete(id);
       console.log(`product with id ${id} deleted successfully`);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async aggregation(category) {
+    try {
+      const response = await productsModel.aggregate([
+        {
+          $match: { category: `${category}` },
+        },
+        {
+          $group: {
+            _id: '$category',
+            cheapest: { $min: '$price' },
+            mostExpensive: { $max: '$price' },
+          },
+        },
+        {
+          $sort: {
+            cheapest: 1,
+          },
+        },
+      ]);
+      return response;
     } catch (error) {
       console.log(error);
     }

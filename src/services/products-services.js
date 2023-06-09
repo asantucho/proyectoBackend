@@ -12,9 +12,9 @@ export const createProductService = async (object) => {
   }
 };
 
-export const getAllProductsService = async () => {
+export const getAllProductsService = async (page, limit) => {
   try {
-    const docs = await productMongo.getAllProducts();
+    const docs = await productMongo.getAllProducts(page, limit);
     return docs;
   } catch (error) {
     console.log(error);
@@ -46,6 +46,15 @@ export const deleteProductByIdService = async (id) => {
   try {
     const deletedProduct = await productMongo.deleteProductById(id);
     return deletedProduct;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const aggregationService = async (category) => {
+  try {
+    const categories = await productMongo.aggregation(category);
+    return categories;
   } catch (error) {
     console.log(error);
   }
