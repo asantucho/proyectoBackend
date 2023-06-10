@@ -5,7 +5,6 @@ const productMongo = new ProductsDaoMongo();
 export const createProductService = async (object) => {
   try {
     const docs = await productMongo.createProduct(object);
-    console.log(docs);
     return docs;
   } catch (error) {
     console.log(error);

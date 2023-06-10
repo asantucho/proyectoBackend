@@ -9,8 +9,16 @@ import 'mongoose-paginate-v2';
 
 export const createProductsController = async (req, res, next) => {
   try {
-    const { title, description, price, stock, thumbnail, code, status } =
-      req.body;
+    const {
+      title,
+      description,
+      price,
+      stock,
+      thumbnail,
+      code,
+      status,
+      category,
+    } = req.body;
     const newProduct = await createProductService({
       title,
       description,
@@ -19,6 +27,7 @@ export const createProductsController = async (req, res, next) => {
       thumbnail,
       code,
       status,
+      category,
     });
     res.json(newProduct);
   } catch (error) {

@@ -4,7 +4,6 @@ export default class ProductsDaoMongo {
   async createProduct(object) {
     try {
       const newProduct = await productsModel.create(object);
-      console.log(newProduct);
       return newProduct;
     } catch (error) {
       console.log(error);
