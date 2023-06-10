@@ -29,8 +29,16 @@ export const createProductsController = async (req, res, next) => {
 
 export const getAllProductsController = async (req, res, next) => {
   try {
-    const { page, limit } = req.params;
-    const products = await getAllProductsService(page, limit);
+    const { page, limit, sort, query } = req.params;
+
+    const options = {
+      limit: parseInt(limit),
+      page: parseInt(page),
+      sort: JSON.parse(sort),
+      query: JSON.parse(query),
+    };
+
+    const products = await getAllProductsService(options);
 
     const nextPage = products.hasNextPage
       ? `http://localhost:8080/products?page=${products.nextPage}&limit=${limit}`
