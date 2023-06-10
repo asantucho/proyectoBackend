@@ -10,9 +10,40 @@ export default class ProductsDaoMongo {
       console.log(error);
     }
   }
-  async getAllProducts(page = 1, limit = 0) {
+  async getAllProducts(options = {}) {
     try {
-      const response = await productsModel.paginate({}, { page, limit });
+      const { limit = 0, page = 1, sort = {}, query = {} } = options;
+
+      let aggregationPipeline = [];
+
+      if (query.category) {
+        aggregationPipeline.push({
+          $match: { category: query.category },
+        });
+      }
+
+      if (sort.price) {
+        aggregationPipeline.push({
+          $sort: { price: sort.price },
+        });
+      }
+
+      if (aggregationPipeline.length === 0) {
+        const response = await productsModel.paginate({}, { page, limit });
+        return response;
+      }
+
+      aggregationPipeline = [
+        ...aggregationPipeline,
+        {
+          $skip: (page - 1) * limit,
+        },
+        {
+          $limit: limit,
+        },
+      ];
+
+      const response = await productsModel.aggregate(aggregationPipeline);
       return response;
     } catch (error) {
       console.log(error);
@@ -43,21 +74,6 @@ export default class ProductsDaoMongo {
     try {
       await productsModel.findByIdAndDelete(id);
       console.log(`product with id ${id} deleted successfully`);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async getAllProductsByCategory(category) {
-    try {
-      const response = await productsModel.aggregate([
-        {
-          $match: { category: `${category}` },
-        },
-        {
-          $sort: { price: 1 },
-        },
-      ]);
-      return response;
     } catch (error) {
       console.log(error);
     }
