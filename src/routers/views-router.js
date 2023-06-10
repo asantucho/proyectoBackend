@@ -6,9 +6,9 @@ viewsRouter.get('/chat', (req, res) => {
   res.render('chat');
 });
 
-viewsRouter.get('/products', (req, res) => {
-  res.render('realtimeproducts');
-});
+// viewsRouter.get('/products', (req, res) => {
+//   res.render('realtimeproducts');
+// });
 
 viewsRouter.get('/', (req, res) => {
   res.render('home');

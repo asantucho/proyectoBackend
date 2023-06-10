@@ -4,7 +4,6 @@ import {
   getAllProductsService,
   getProductByIdService,
   updateProductService,
-  getAllProductsByCategoryService,
 } from '../services/products-services.js';
 import 'mongoose-paginate-v2';
 
@@ -34,11 +33,25 @@ export const getAllProductsController = async (req, res, next) => {
     const options = {
       limit: parseInt(limit),
       page: parseInt(page),
-      sort: JSON.parse(sort),
-      query: JSON.parse(query),
+      sort: sort ? JSON.parse(sort) : {},
+      query: query ? JSON.parse(query) : {},
     };
 
     const products = await getAllProductsService(options);
+
+    if (!products || !products.doc) {
+      return res.json({
+        status: 'success',
+        payload: 0,
+        totalPages: 0,
+        currentPage: page,
+        hasPrevPage: false,
+        hasNextPage: false,
+        prevLink: null,
+        nextLink: null,
+        results: [],
+      });
+    }
 
     const nextPage = products.hasNextPage
       ? `http://localhost:8080/products?page=${products.nextPage}&limit=${limit}`
