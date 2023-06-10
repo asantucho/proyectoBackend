@@ -37,11 +37,14 @@ export const createProductsController = async (req, res, next) => {
 
 export const getAllProductsController = async (req, res, next) => {
   try {
-    const { page, limit, sort, query } = req.params;
+    const { limit = 10, page = 1, sort = {}, query = {} } = req.query;
+
+    console.log('sort:', sort);
+    console.log('query:', query);
 
     const options = {
-      limit: parseInt(limit),
-      page: parseInt(page),
+      limit: parseInt(limit) || 10,
+      page: parseInt(page) || 1,
       sort: sort ? JSON.parse(sort) : {},
       query: query ? JSON.parse(query) : {},
     };
@@ -80,16 +83,6 @@ export const getAllProductsController = async (req, res, next) => {
       nextLink: nextPage,
       results: products.doc,
     });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getAllProductsByCategoryController = async (req, res, next) => {
-  try {
-    const { category } = req.params;
-    const products = await getAllProductsByCategoryService(category);
-    res.json(products);
   } catch (error) {
     next(error);
   }

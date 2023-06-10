@@ -11,7 +11,9 @@ export default class ProductsDaoMongo {
   }
   async getAllProducts(options = {}) {
     try {
-      const { limit = 0, page = 1, sort = {}, query = {} } = options;
+      const { limit = 0, page = 1, query = {}, sort = {} } = options;
+
+      console.log('Options:', options);
 
       let aggregationPipeline = [];
 
@@ -27,8 +29,9 @@ export default class ProductsDaoMongo {
         });
       }
 
-      if (aggregationPipeline.length === 0) {
+      if (aggregationPipeline.length !== 0) {
         const response = await productsModel.paginate({}, { page, limit });
+        console.log('Returning from if (aggregationPipeline.length === 0)');
         return response;
       }
 
@@ -43,6 +46,7 @@ export default class ProductsDaoMongo {
       ];
 
       const response = await productsModel.aggregate(aggregationPipeline);
+      console.log('Response:', response);
       return response;
     } catch (error) {
       console.log(error);
