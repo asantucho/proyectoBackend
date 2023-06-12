@@ -31,7 +31,7 @@ export default class ProductsDaoMongo {
 
       if (aggregationPipeline.length !== 0) {
         const response = await productsModel.paginate({}, { page, limit });
-        console.log('Returning from if (aggregationPipeline.length === 0)');
+        console.log('Returning from if (aggregationPipeline.length !== 0)');
         return response;
       }
 
