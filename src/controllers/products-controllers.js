@@ -51,7 +51,9 @@ export const getAllProductsController = async (req, res, next) => {
 
     const products = await getAllProductsService(options);
 
-    if (!products || !products.doc) {
+    console.log(products);
+
+    if (!products) {
       return res.json({
         status: 'success',
         payload: 0,
@@ -74,14 +76,14 @@ export const getAllProductsController = async (req, res, next) => {
 
     res.json({
       status: 'success',
-      payload: products.doc.length,
+      payload: products.length,
       totalPages: products.totalPages,
       currentPage: page,
       hasPrevPage: products.hasPrevPage,
       hasNextPage: products.hasNextPage,
       prevLink: prevPage,
       nextLink: nextPage,
-      results: products.doc,
+      results: products,
     });
   } catch (error) {
     next(error);
