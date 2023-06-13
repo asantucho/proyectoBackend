@@ -12,7 +12,7 @@ export default class ProductsDaoMongo {
   async getAllProducts(options = {}) {
     try {
       const { limit = 0, page = 1, query = {}, sort = {} } = options;
-      console.log('Options:', options);
+
       let aggregationPipeline = [];
       if (query?.category) {
         aggregationPipeline.push({
@@ -20,8 +20,9 @@ export default class ProductsDaoMongo {
         });
       }
       if (sort?.price) {
+        const sortOrder = sort.price === 'asc' ? 1 : -1;
         aggregationPipeline.push({
-          $sort: { price: sort.price },
+          $sort: { price: sortOrder },
         });
       }
       if (aggregationPipeline.length === 0) {
@@ -39,7 +40,6 @@ export default class ProductsDaoMongo {
         },
       ];
       const response = await productsModel.aggregate(aggregationPipeline);
-      console.log('Response:', response);
       return response;
     } catch (error) {
       console.log(error);

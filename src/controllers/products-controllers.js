@@ -37,17 +37,22 @@ export const createProductsController = async (req, res, next) => {
 
 export const getAllProductsController = async (req, res, next) => {
   try {
-    const { limit = 10, page = 1, sort = {}, query = {} } = req.params;
+    const { limit = 10, page = 1 } = req.query;
+    const { sort = {}, category } = req.query;
 
     console.log('sort:', sort);
-    console.log('query:', query);
+    console.log('category:', category);
 
     const options = {
       limit: parseInt(limit) || 10,
       page: parseInt(page) || 1,
-      sort: sort ? sort : {},
-      query: query ? query : {},
+      query: {},
+      sort: sort ? { price: sort } : {},
     };
+
+    if (category) {
+      options.query.category = category;
+    }
 
     const products = await getAllProductsService(options);
 

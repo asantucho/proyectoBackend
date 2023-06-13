@@ -41,10 +41,11 @@ export default class CartsDaoMongo {
     try {
       const cart = await cartsModel.findById(cartId);
       console.log('aca vemos el console log de cart ' + cart);
+      console.log(prodId);
       const productToAdd = await productsModel.findById(prodId);
       console.log('a ver que trae el productToAdd ' + productToAdd);
       const isInCart = cart.products.find((product) => {
-        product.prodId.equals(productToAdd._id);
+        product.prodId.toString() === productToAdd._id;
       });
       console.log(isInCart);
       if (!isInCart) {
