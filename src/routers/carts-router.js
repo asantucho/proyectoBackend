@@ -14,9 +14,9 @@ const cartRouter = Router();
 cartRouter.get('/', getAllCartsController);
 cartRouter.get('/:id', getCartByIdController);
 cartRouter.post('/', createCartController);
-cartRouter.post('/:cartId/:prodId', addToCartController);
+cartRouter.put('/add/:cartId/:prodId', addToCartController);
 cartRouter.delete('/:id', deleteCartByIdController);
-cartRouter.put('/:cartId/:prodId', deleteProductFromCartController);
+cartRouter.put('/delete/:cartId/:prodId', deleteProductFromCartController);
 cartRouter.put('/:id', emptyCartController);
 
 export default cartRouter;

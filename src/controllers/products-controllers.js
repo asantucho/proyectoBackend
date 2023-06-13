@@ -37,7 +37,7 @@ export const createProductsController = async (req, res, next) => {
 
 export const getAllProductsController = async (req, res, next) => {
   try {
-    const { limit = 10, page = 1, sort = {}, query = {} } = req.query;
+    const { limit = 10, page = 1, sort = {}, query = {} } = req.params;
 
     console.log('sort:', sort);
     console.log('query:', query);
@@ -45,8 +45,8 @@ export const getAllProductsController = async (req, res, next) => {
     const options = {
       limit: parseInt(limit) || 10,
       page: parseInt(page) || 1,
-      sort: sort ? JSON.parse(sort) : {},
-      query: query ? JSON.parse(query) : {},
+      sort: sort ? sort : {},
+      query: query ? query : {},
     };
 
     const products = await getAllProductsService(options);
@@ -77,10 +77,10 @@ export const getAllProductsController = async (req, res, next) => {
     res.json({
       status: 'success',
       payload: products.length,
-      totalPages: products.totalPages,
+      pages: products.totalPages,
       currentPage: page,
-      hasPrevPage: products.hasPrevPage,
-      hasNextPage: products.hasNextPage,
+      hasPrevPage: products.hasPrevPage || 'no previous page',
+      hasNextPage: products.hasNextPage || 'no next page',
       prevLink: prevPage,
       nextLink: nextPage,
       results: products,

@@ -1,6 +1,6 @@
 import { cartsModel } from './models/carts-model.js';
 import { productsModel } from './models/products-model.js';
-import { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 
 export default class CartsDaoMongo {
   async createCart(object) {
@@ -43,14 +43,18 @@ export default class CartsDaoMongo {
       console.log('aca vemos el console log de cart ' + cart);
       const productToAdd = await productsModel.findById(prodId);
       console.log('a ver que trae el productToAdd ' + productToAdd);
-      const isInCart = cart.products.find(
-        (product) => product.prodId === productToAdd._id.toString()
-      );
+      const isInCart = cart.products.find((product) => {
+        product.prodId.equals(productToAdd._id);
+      });
       console.log(isInCart);
       if (!isInCart) {
-        cart.products.push({ prodId, quantity: 1 });
+        const newProduct = {
+          prodId: productToAdd._id.toString(),
+          quantity: 1,
+        };
+        cart.products.push(newProduct);
       } else {
-        isInCart.quantity++;
+        isInCart.quantity += 1;
       }
       console.log(cart);
       await cart.markModified('products');
