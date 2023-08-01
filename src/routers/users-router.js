@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import UserController from '../controllers/users-controller.js';
-import { checkAuth } from '../jwt/jwt.js';
+import { checkAuth } from '../lib/jwt/jwt.js';
 
 const userController = new UserController();
 const userRouter = Router();

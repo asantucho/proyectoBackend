@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
-import '../jwt/jwt.js';
+import '../lib/jwt/jwt.js';
 
 const currentRouter = Router();
 
