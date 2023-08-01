@@ -1,41 +1,10 @@
+import MainClass from '../main-class.js';
 import { cartsModel } from './models/carts-model.js';
 import { productsModel } from './models/products-model.js';
-import mongoose from 'mongoose';
 
-export default class CartsDaoMongo {
-  async createCart(object) {
-    try {
-      const cart = await cartsModel.create(object);
-      console.log(`cart ${cart} created successfully`);
-      return cart;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async getCartById(id) {
-    try {
-      const response = cartsModel.findById(id).populate('products.prodId');
-      return response;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async getAllCarts() {
-    try {
-      const response = await cartsModel.find({});
-      return response;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async deleteCartById(id) {
-    try {
-      const response = await cartsModel.findByIdAndDelete(id);
-      console.log(`cart with id ${id} deleted successfully`);
-      return response;
-    } catch (error) {
-      console.log(error);
-    }
+export default class CartsManager extends MainClass {
+  constructor() {
+    super(cartsModel);
   }
   async addToCart(cartId, prodId) {
     try {
