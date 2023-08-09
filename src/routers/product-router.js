@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ProductController from '../controllers/products-controller.js';
-import { isAdmin } from '../lib/middlewares/isAdmin.js';
+import { isAdmin } from '../lib/middlewares/checkRole.js';
 
 const productController = new ProductController();
 const productRouter = Router();
