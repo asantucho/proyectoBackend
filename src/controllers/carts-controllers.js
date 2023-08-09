@@ -38,4 +38,21 @@ export default class CartsController extends Controller {
       next(error);
     }
   };
+  processPurchase = async (req, res, next) => {
+    try {
+      const { cartId } = req.params;
+      const result = await this.service.processPurchase(cartId);
+
+      if (result.success) {
+        createResponse(res, 200, {
+          message: 'Compra exitosa',
+          ticket: result.ticket,
+        });
+      } else {
+        createResponse(res, 500, { message: 'Error al procesar la compra' });
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
 }

@@ -16,5 +16,6 @@ cartRouter.put(
   cartsController.deleteProductFromCart
 );
 cartRouter.put('/:id', cartsController.emptyCart);
+cartRouter.post('/:cartId/purchase', isUser, cartsController.processPurchase);
 
 export default cartRouter;
