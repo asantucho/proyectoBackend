@@ -1,7 +1,5 @@
 import Services from './main-services.js';
-import ProductManager from '../daos/managers/products-manager.js';
-
-const productManager = new ProductManager();
+import productManager from '../daos/persistence.js';
 
 export default class ProductService extends Services {
   constructor() {

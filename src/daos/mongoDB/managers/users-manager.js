@@ -1,6 +1,6 @@
 import { usersModel } from '../models/users-model.js';
 import MainClass from '../main-class.js';
-import { createHash, isValidPassword } from '../../utils.js';
+import { createHash, isValidPassword } from '../../../utils.js';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 

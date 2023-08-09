@@ -1,6 +1,6 @@
 import MainClass from '../main-class.js';
-import { cartsModel } from './models/carts-model.js';
-import { productsModel } from './models/products-model.js';
+import { cartsModel } from '../models/carts-model.js';
+import { productsModel } from '../models/products-model.js';
 
 export default class CartsManager extends MainClass {
   constructor() {
@@ -66,4 +66,5 @@ export default class CartsManager extends MainClass {
       console.log(error);
     }
   }
+  async purchase(id) {}
 }

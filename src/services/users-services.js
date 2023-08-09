@@ -1,7 +1,5 @@
 import Services from './main-services.js';
-import UserManager from '../daos/managers/users-manager.js';
-
-const userManager = new UserManager();
+import userManager from '../daos/persistence.js';
 
 export default class UserService extends Services {
   constructor() {

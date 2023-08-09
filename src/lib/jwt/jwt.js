@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import passport from 'passport';
 import { ExtractJwt, Strategy as jwtStrategy } from 'passport-jwt';
-import UserManager from '../daos/managers/users-manager.js';
+import UserManager from '../../daos/mongoDB/managers/users-manager.js';
 
 const userManager = new UserManager();
 const SECRET_KEY_JWT = process.env.SECRET_KEY_JWT;

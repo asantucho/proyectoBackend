@@ -3,18 +3,15 @@ import passport from 'passport';
 import handlebars from 'express-handlebars';
 import { __dirname } from './utils.js';
 import { init as initSocket } from './socket.js';
-import {
-  createMessageServices,
-  getAllMessagesService,
-} from './services/messages-services.js';
-import './database/database.js';
+import MessageServices from './services/messages-services.js';
+import './lib/database/database.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 import 'dotenv/config';
-import { errorHandler } from './middlewares/errorHandler.js';
+import { errorHandler } from './lib/middlewares/errorHandler.js';
 import mainRouter from './routers/main-routers.js';
-import './jwt/jwt.js';
+import './lib/jwt/jwt.js';
 
 const storeOptions = {
   store: MongoStore.create({
@@ -51,6 +48,8 @@ const httpServer = app.listen(8080, () => {
 
 const socketServer = initSocket(httpServer);
 
+const messageServices = new MessageServices();
+
 socketServer.on('connection', (socket) => {
   console.log('user connected successfully');
   socket.on('disconnect', () => {
@@ -60,7 +59,7 @@ socketServer.on('connection', (socket) => {
     console.log(`user ${user} is logged in`);
   });
   socket.on('chat:message', async (message) => {
-    await createMessageServices(message);
-    socketServer.emit('messages', await getAllMessagesService());
+    await messageServices.create(message);
+    socketServer.emit('messages', await messageServices.getAll());
   });
 });
