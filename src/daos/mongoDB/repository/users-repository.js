@@ -1,4 +1,4 @@
-import { userManager } from '.../persistence.js';
+import userManager from '../../persistence.js';
 import UsersResponseDTO from '../dtos/users-dto.js';
 
 export default class UsersRepository {

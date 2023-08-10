@@ -1,14 +1,14 @@
-import 'dotenv/config';
+import config from '../../config/config.js';
 import passport from 'passport';
 import { ExtractJwt, Strategy as jwtStrategy } from 'passport-jwt';
 import UserManager from '../../daos/mongoDB/managers/users-manager.js';
 
 const userManager = new UserManager();
-const SECRET_KEY_JWT = process.env.SECRET_KEY_JWT;
+const SECRET_KEY = config.SECRET_KEY;
 
 const strategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: '123456',
+  secretOrKey: SECRET_KEY,
 };
 
 const cookieExtractor = (req) => {
@@ -25,6 +25,7 @@ const cookieStrategyOptions = {
 const verifyToken = async (jwt_payload, done) => {
   try {
     const user = await userManager.getById(jwt_payload.userId);
+    console.log(user);
     if (!user) return done(null, false);
     return done(null, jwt_payload);
   } catch (error) {
@@ -40,7 +41,7 @@ export const checkAuth = async (req, res, next) => {
         .status(401)
         .json({ msg: 'Unauthorized porque no hay authheader' });
     const token = authHeader.split(' ')[1];
-    const decode = jwt.verify(token, SECRET_KEY_JWT);
+    const decode = jwt.verify(token, SECRET_KEY);
     const user = await userManager.getById(decode.userId);
     if (!user)
       return res.status(401).json({ msg: 'Unauthorized porque no hay user' });

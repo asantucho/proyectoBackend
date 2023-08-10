@@ -1,5 +1,7 @@
 import Services from './main-services.js';
-import userManager from '../daos/persistence.js';
+import persistence from '../daos/persistence.js';
+
+const { userManager } = persistence;
 
 export default class UserService extends Services {
   constructor() {
@@ -9,6 +11,7 @@ export default class UserService extends Services {
   async register(user) {
     try {
       const token = await this.manager.register(user);
+      console.log('paso exitosamente el service');
       return token;
     } catch (error) {
       console.log('error en el service', error);

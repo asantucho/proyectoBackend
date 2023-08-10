@@ -33,7 +33,7 @@ export default class UserManager extends MainClass {
       console.log('error en generateToken: ', error);
     }
   }
-  async getByEmail(email) {
+  getByEmail = async (email) => {
     try {
       console.log('getByEmail called with email:', email);
       const existingUser = await this.model.findOne({ email }).exec();
@@ -44,8 +44,8 @@ export default class UserManager extends MainClass {
     } catch (error) {
       console.log('error en el user-manager(getByEmail)', error);
     }
-  }
-  async register(user) {
+  };
+  register = async (user) => {
     try {
       console.log('user que recibe el register: ', user);
       const { email, password } = user;
@@ -72,12 +72,13 @@ export default class UserManager extends MainClass {
       console.log('newUser: ', newUser);
       const token = this.#generateToken(newUser);
       console.log('Token generated:', token);
+      console.log('paso exitosamente el dao');
       return token;
     } catch (error) {
       console.log('error en el user-manager(register):', error);
     }
-  }
-  async login(user) {
+  };
+  login = async (user) => {
     try {
       const { email, password } = user;
       const existingUser = await this.getByEmail(email);
@@ -92,8 +93,8 @@ export default class UserManager extends MainClass {
     } catch (error) {
       console.log('error en el manager', error);
     }
-  }
-  async profile(token) {
+  };
+  profile = async (token) => {
     try {
       const decodedToken = jwt.verify(token, SECRET_KEY);
       const userId = decodedToken.userId;
@@ -106,5 +107,5 @@ export default class UserManager extends MainClass {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 }

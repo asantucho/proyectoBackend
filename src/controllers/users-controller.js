@@ -13,6 +13,7 @@ export default class UserController extends Controller {
     try {
       const token = await this.service.register(req.body);
       createResponse(res, 200, token);
+      console.log('paso exitosamente el controller');
     } catch (error) {
       next(error.message);
     }

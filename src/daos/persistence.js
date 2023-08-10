@@ -8,6 +8,7 @@ let productManager;
 let userManager;
 
 let persistence = process.argv[2];
+console.log('persistence: ', persistence);
 
 switch (persistence) {
   case 'file':
@@ -23,5 +24,7 @@ switch (persistence) {
     userManager = new UserManager();
     break;
 }
+
+console.log('userManager del persistence: ', userManager);
 
 export default { userManager, productManager };
