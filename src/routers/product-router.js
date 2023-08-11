@@ -11,19 +11,19 @@ productRouter.get('/', productController.getAll);
 productRouter.get('/:id', productController.getById);
 productRouter.post(
   '/',
-  passport.authenticate('jwtCookies', { session: false }),
+  passport.authenticate('jwt', { session: false }),
   isAdmin,
   productController.create
 );
 productRouter.put(
   '/:id',
-  passport.authenticate('jwtCookies', { session: false }),
+  passport.authenticate('jwt', { session: false }),
   isAdmin,
   productController.update
 );
 productRouter.delete(
   '/:id',
-  passport.authenticate('jwtCookies', { session: false }),
+  passport.authenticate('jwt', { session: false }),
   isAdmin,
   productController.delete
 );
