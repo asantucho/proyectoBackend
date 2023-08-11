@@ -9,7 +9,7 @@ export default class CartsServices extends Services {
   }
   async addToCart(cartId, prodId) {
     try {
-      const addedProduct = await carts.addToCart(cartId, prodId);
+      const addedProduct = await cartsManager.addToCart(cartId, prodId);
       return addedProduct;
     } catch (error) {
       console.log(error);
@@ -17,7 +17,10 @@ export default class CartsServices extends Services {
   }
   async deleteProductFromCart(cartId, prodId) {
     try {
-      const deletedProduct = await carts.deleteProductFromCart(cartId, prodId);
+      const deletedProduct = await cartsManager.deleteProductFromCart(
+        cartId,
+        prodId
+      );
       return deletedProduct;
     } catch (error) {
       console.log(error);
@@ -25,15 +28,15 @@ export default class CartsServices extends Services {
   }
   async emptyCart(id) {
     try {
-      const emptyCart = await carts.emptyCart(id);
+      const emptyCart = await cartsManager.emptyCart(id);
       return emptyCart;
     } catch (error) {
       console.log(error);
     }
   }
-  async processPurchase(id) {
+  async processPurchase(cartId) {
     try {
-      const result = await cartsManager.processPurchase(id);
+      const result = await cartsManager.processPurchase(cartId);
       return result;
     } catch (error) {
       console.log(error);

@@ -13,4 +13,12 @@ const usersSchema = new mongoose.Schema({
   isGoogle: { type: Boolean, required: false, default: false },
 });
 
+usersSchema.pre('save', async function (next) {
+  if (!this.cart) {
+    const newCart = await cartsModel.create({});
+    this.cart = newCart._id;
+  }
+  next();
+});
+
 export const usersModel = mongoose.model(usersCollection, usersSchema);

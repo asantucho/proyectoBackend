@@ -1,6 +1,8 @@
 import MainClass from '../main-class.js';
+import { ticketsModel } from '../models/ticket-model.js';
 import { cartsModel } from '../models/carts-model.js';
 import { productsModel } from '../models/products-model.js';
+import { usersModel } from '../models/users-model.js';
 import { generateUniqueCode, calculateTotalAmount } from '../../../utils.js';
 
 export default class CartsManager extends MainClass {
@@ -10,10 +12,7 @@ export default class CartsManager extends MainClass {
   async addToCart(cartId, prodId) {
     try {
       const cart = await cartsModel.findById(cartId);
-      console.log('aca vemos el console log de cart ' + cart);
-      console.log(prodId);
       const productToAdd = await productsModel.findById(prodId);
-      console.log('a ver que trae el productToAdd ' + productToAdd);
       const isInCart = cart.products.find((product) => {
         return product.prodId.toString() === productToAdd._id.toString();
       });
@@ -67,7 +66,7 @@ export default class CartsManager extends MainClass {
       console.log(error);
     }
   }
-  async processPurchase(cartId) {
+  async processPurchase(cartId, user) {
     try {
       const cart = await cartsModel
         .findById(cartId)
@@ -87,9 +86,7 @@ export default class CartsManager extends MainClass {
         }
       }
       if (productsToPurchase.length === 0) {
-        return res.status(400).json({
-          message: 'No hay productos disponibles para comprar en el carrito.',
-        });
+        return false;
       }
 
       const ticketProducts = [];
@@ -106,10 +103,10 @@ export default class CartsManager extends MainClass {
         });
       }
 
-      const newTicket = new Ticket({
+      const newTicket = new ticketsModel({
         code: generateUniqueCode(),
         amount: calculateTotalAmount(ticketProducts),
-        purchaser: cart.user.cart,
+        purchaser: user._id,
       });
 
       await newTicket.save();
@@ -121,12 +118,10 @@ export default class CartsManager extends MainClass {
       cart.products = remainingProducts;
       await cart.save();
 
-      return res
-        .status(200)
-        .json({ message: 'Compra exitosa', ticket: newTicket });
+      return { success: true, ticket: newTicket };
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Error al procesar la compra' });
+      return { success: false };
     }
   }
 }
