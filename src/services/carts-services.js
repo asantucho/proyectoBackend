@@ -34,9 +34,10 @@ export default class CartsServices extends Services {
       console.log(error);
     }
   }
-  async processPurchase(cartId) {
+  async createTicket(data) {
     try {
-      const result = await cartsManager.processPurchase(cartId);
+      const result = await cartsManager.createTicket(data);
+      console.log('processPurchase services pasado correctamente');
       return result;
     } catch (error) {
       console.log(error);

@@ -22,6 +22,7 @@ export const generateUniqueCode = () => {
 };
 
 export const calculateTotalAmount = (products) => {
+  console.log('products del calculateTotal: ', products);
   return products.reduce(
     (total, product) => total + product.quantity * product.price,
     0

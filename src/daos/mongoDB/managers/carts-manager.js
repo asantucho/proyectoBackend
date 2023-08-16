@@ -66,59 +66,10 @@ export default class CartsManager extends MainClass {
       console.log(error);
     }
   }
-  async processPurchase(cartId, user) {
+  async createTicket(data) {
     try {
-      const cart = await cartsModel
-        .findById(cartId)
-        .populate('products.prodId');
-
-      const productsToPurchase = [];
-
-      for (const cartProduct of cart.products) {
-        const product = cartProduct.prodId;
-
-        if (product.stock >= cartProduct.quantity) {
-          productsToPurchase.push({
-            product: product._id,
-            quantity: cartProduct.quantity,
-            price: product.price,
-          });
-        }
-      }
-      if (productsToPurchase.length === 0) {
-        return false;
-      }
-
-      const ticketProducts = [];
-
-      for (const purchaseProduct of productsToPurchase) {
-        await productsModel.findByIdAndUpdate(purchaseProduct.product, {
-          $inc: { stock: -purchaseProduct.quantity },
-        });
-
-        ticketProducts.push({
-          product: purchaseProduct.product,
-          quantity: purchaseProduct.quantity,
-          price: purchaseProduct.price,
-        });
-      }
-
-      const newTicket = new ticketsModel({
-        code: generateUniqueCode(),
-        amount: calculateTotalAmount(ticketProducts),
-        purchaser: user._id,
-      });
-
-      await newTicket.save();
-
-      const remainingProducts = cart.products.filter(
-        (cartProduct) =>
-          !productsToPurchase.some((p) => p.product.equals(cartProduct.prodId))
-      );
-      cart.products = remainingProducts;
-      await cart.save();
-
-      return { success: true, ticket: newTicket };
+      const response = await ticketsModel.create(data);
+      return response;
     } catch (error) {
       console.error(error);
       return { success: false };
