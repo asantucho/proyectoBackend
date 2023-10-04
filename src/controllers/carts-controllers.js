@@ -1,11 +1,13 @@
 import Controller from './main-controller.js';
 import CartsServices from '../services/carts-services.js';
 import ProductManager from '../daos/mongoDB/managers/products-manager.js';
+import { createResponse } from '../utils/createResponse.js';
 import {
-  createResponse,
   generateUniqueCode,
   calculateTotalAmount,
-} from '../utils.js';
+} from '../utils/ticketFunctions.js';
+import { developmentLogger, productionLogger } from '../utils/loggers.js';
+import config from '../config/config.js';
 
 const cartsServices = new CartsServices();
 const productManager = new ProductManager();
@@ -18,8 +20,28 @@ export default class CartsController extends Controller {
     try {
       const { cartId, prodId } = req.params;
       const addedProduct = await this.service.addToCart(cartId, prodId);
+
+      if (config.ENV === 'PROD') {
+        productionLogger.info(
+          `Product added to cart: ${JSON.stringify(addedProduct)}`
+        );
+      } else {
+        developmentLogger.info(
+          `Product added to cart: ${JSON.stringify(addedProduct)}`
+        );
+      }
       createResponse(res, 200, addedProduct);
     } catch (error) {
+      if (config.ENV === 'PROD') {
+        productionLogger.error(
+          `Error trying to add the product to cart: ${error.message}`
+        );
+      } else {
+        developmentLogger.error(
+          `Error trying to add the product to cart: ${error.message}`
+        );
+      }
+
       next(error.message);
     }
   };
@@ -30,8 +52,26 @@ export default class CartsController extends Controller {
         cartId,
         prodId
       );
+      if (config.ENV === 'PROD') {
+        productionLogger.info(
+          `Product removed from cart: ${JSON.stringify(deletedProduct)}`
+        );
+      } else {
+        developmentLogger.info(
+          `Product removed from cart: ${JSON.stringify(deletedProduct)}`
+        );
+      }
       createResponse(res, 200, deletedProduct);
     } catch (error) {
+      if (config.ENV === 'PROD') {
+        productionLogger.error(
+          `Error trying to remove product from cart: ${error.message}`
+        );
+      } else {
+        developmentLogger.error(
+          `Error trying to remove product from cart: ${error.message}`
+        );
+      }
       next(error.message);
     }
   };
@@ -39,8 +79,18 @@ export default class CartsController extends Controller {
     try {
       const { id } = req.params;
       const emptyCart = await this.service.emptyCart(id);
+      if (config.ENV === 'PROD') {
+        productionLogger.info(`Cart emptied: ${JSON.stringify(emptyCart)}`);
+      } else {
+        developmentLogger.info(`Cart emptied: ${JSON.stringify(emptyCart)}`);
+      }
       createResponse(res, 200, emptyCart);
     } catch (error) {
+      if (config.ENV === 'PROD') {
+        productionLogger.error(`Error trying to empty cart: ${error.message}`);
+      } else {
+        developmentLogger.error(`Error trying to empty cart: ${error.message}`);
+      }
       next(error);
     }
   };
@@ -49,7 +99,6 @@ export default class CartsController extends Controller {
       const { cartId } = req.params;
       const { user } = req.user;
       const cart = await this.service.getById(cartId);
-      console.log('cart en processPurchase: ', cart);
       if (!cart)
         return createResponse(
           res,
@@ -62,9 +111,7 @@ export default class CartsController extends Controller {
       const purchasedProducts = [];
 
       for (const productItem of productsToPurchase) {
-        console.log('Product Item:', productItem);
         const product = await productManager.getById(productItem.prodId);
-        console.log('Product:', product);
         if (product.stock < productItem.quantity) {
           noStockProducts.push(product._id);
         } else {
@@ -97,9 +144,20 @@ export default class CartsController extends Controller {
         cart.product = productsNotPurchased;
         await cart.save();
 
+        if (config.ENV === 'PROD') {
+          productionLogger.info('Order placed successfully!');
+        } else {
+          developmentLogger.info('Order placed successfully!');
+        }
+
         return createResponse(res, 200, ticket);
       }
     } catch (error) {
+      if (config.ENV === 'PROD') {
+        productionLogger.error(`Error placing the order: ${error.message}`);
+      } else {
+        developmentLogger.error(`Error placing the order: ${error.message}`);
+      }
       next(error);
     }
   };

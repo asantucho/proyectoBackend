@@ -2,8 +2,6 @@ import MainClass from '../main-class.js';
 import { ticketsModel } from '../models/ticket-model.js';
 import { cartsModel } from '../models/carts-model.js';
 import { productsModel } from '../models/products-model.js';
-import { usersModel } from '../models/users-model.js';
-import { generateUniqueCode, calculateTotalAmount } from '../../../utils.js';
 
 export default class CartsManager extends MainClass {
   constructor() {
@@ -16,7 +14,6 @@ export default class CartsManager extends MainClass {
       const isInCart = cart.products.find((product) => {
         return product.prodId.toString() === productToAdd._id.toString();
       });
-      console.log(isInCart);
       if (!isInCart) {
         const newProduct = {
           prodId: productToAdd._id.toString(),
@@ -26,7 +23,6 @@ export default class CartsManager extends MainClass {
       } else {
         isInCart.quantity += 1;
       }
-      console.log(cart);
       await cart.markModified('products');
       await cart.save();
       console.log('product added successfully!');

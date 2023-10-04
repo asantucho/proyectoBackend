@@ -1,19 +1,18 @@
 import Controller from './main-controller.js';
 import UserService from '../services/users-services.js';
-import { createResponse } from '../utils.js';
+import { createResponse } from '../utils/createResponse.js';
+import { sendPasswordResetEmail } from '../utils/mailing-service.js';
 
 const userService = new UserService();
 
 export default class UserController extends Controller {
   constructor() {
-    console.log('UserController constructor called');
     super(userService);
   }
   register = async (req, res, next) => {
     try {
       const token = await this.service.register(req.body);
       createResponse(res, 200, token);
-      console.log('paso exitosamente el controller');
     } catch (error) {
       next(error.message);
     }
@@ -50,6 +49,83 @@ export default class UserController extends Controller {
       createResponse(res, 200, existingUser);
     } catch (error) {
       next(error);
+    }
+  };
+  forgotPassword = async (req, res, next) => {
+    try {
+      const { email } = req.body;
+      const user = await this.service.getByEmail(email);
+
+      if (!user) {
+        return createResponse(res, 404, { error: 'User not found' });
+      }
+
+      const resetToken = jwt.sign({ userId: user._id }, SECRET_KEY, {
+        expiresIn: '1h',
+      });
+
+      await sendPasswordResetEmail(user.email, resetToken);
+
+      createResponse(res, 200, {
+        message: 'Reset link sent successfully!',
+      });
+    } catch (error) {
+      next(error.message);
+    }
+  };
+  async resetPassword(req, res, next) {
+    try {
+      const { token, newPassword } = req.body;
+      try {
+        const decodedToken = jwt.verify(token, SECRET_KEY);
+
+        const updatedUser = await this.service.updatePassword(
+          decodedToken.userId,
+          newPassword
+        );
+        createResponse(res, 200, {
+          message: 'Password reset successfully!',
+        });
+      } catch (err) {
+        createResponse(res, 400, {
+          error: 'Token provided invalid or expired',
+        });
+      }
+    } catch (error) {
+      next(error.message);
+    }
+  }
+  generateResetLink = async (req, res, next) => {
+    try {
+      const { email } = req.body;
+      const user = await this.service.getByEmail(email);
+
+      if (!user) {
+        return createResponse(res, 404, { error: 'user not found' });
+      }
+
+      if (user.resetToken) {
+        const decodedToken = jwt.verify(user.resetToken, SECRET_KEY);
+        if (decodedToken.exp > Math.floor(Date.now() / 1000)) {
+          return createResponse(res, 400, {
+            error: 'active token',
+          });
+        }
+      }
+
+      const resetToken = jwt.sign({ userId: user._id }, SECRET_KEY, {
+        expiresIn: '1h',
+      });
+
+      user.resetToken = resetToken;
+      await user.save();
+
+      await sendPasswordResetEmail(user.email, resetToken);
+      createResponse(res, 200, {
+        message: 'reset link sent by email successfully',
+      });
+    } catch (error) {
+      next(error.message);
     }
   };
 }

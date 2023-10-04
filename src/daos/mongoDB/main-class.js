@@ -1,15 +1,20 @@
+import { developmentLogger, productionLogger } from '../../utils/loggers.js';
+import config from '../../config/config.js';
+
 export default class MainClass {
   constructor(model) {
     this.model = model;
-    console.log('MainClass constructor called');
   }
   async create(object) {
     try {
       const response = await this.model.create(object);
-      console.log(response);
       return response;
     } catch (error) {
-      console.log('error en el MAIN-DAO', error);
+      if (config.ENV === 'PROD') {
+        productionLogger.error(`Error in MAIN-DAO: ${error.message}`);
+      } else {
+        developmentLogger.error(`Error in MAIN-DAO: ${error.message}`);
+      }
     }
   }
   async getAll() {
@@ -17,7 +22,11 @@ export default class MainClass {
       const response = await this.model.find({});
       return response;
     } catch (error) {
-      console.log('error en el MAIN-DAO', error);
+      if (config.ENV === 'PROD') {
+        productionLogger.error(`Error in MAIN-DAO: ${error.message}`);
+      } else {
+        developmentLogger.error(`Error in MAIN-DAO: ${error.message}`);
+      }
     }
   }
   async getById(id) {
@@ -25,7 +34,11 @@ export default class MainClass {
       const response = await this.model.findById(id);
       return response;
     } catch (error) {
-      console.log('error en MAIN-DAO', error);
+      if (config.ENV === 'PROD') {
+        productionLogger.error(`Error in MAIN-DAO: ${error.message}`);
+      } else {
+        developmentLogger.error(`Error in MAIN-DAO: ${error.message}`);
+      }
     }
   }
   async update(id, object) {
@@ -33,7 +46,11 @@ export default class MainClass {
       const updatedResponse = await this.model.updateOne({ _id: id }, object);
       return updatedResponse;
     } catch (error) {
-      console.log('error en MAIN-DAO', error);
+      if (config.ENV === 'PROD') {
+        productionLogger.error(`Error in MAIN-DAO: ${error.message}`);
+      } else {
+        developmentLogger.error(`Error in MAIN-DAO: ${error.message}`);
+      }
     }
   }
   async delete(id) {
@@ -41,7 +58,11 @@ export default class MainClass {
       const toDelete = await this.model.findByIdAndDelete(id);
       return toDelete;
     } catch (error) {
-      console.log('error en MAIN-DAO', error);
+      if (config.ENV === 'PROD') {
+        productionLogger.error(`Error in MAIN-DAO: ${error.message}`);
+      } else {
+        developmentLogger.error(`Error in MAIN-DAO: ${error.message}`);
+      }
     }
   }
 }

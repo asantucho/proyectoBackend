@@ -1,17 +1,16 @@
 {
-  "name": "desafio-complementario-02",
+  "name": "desafio-complementario-03",
   "version": "1.0.0",
-  "description": "",
   "main": "src/app.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^8.0.2",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "connect-mongo": "^5.0.0",
@@ -23,12 +22,16 @@
     "express-openid-connect": "^2.16.0",
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.0",
+    "log4js": "^6.9.1",
     "mongodb": "^5.6.0",
     "mongoose": "^7.4.1",
+    "nodemailer": "^6.9.5",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
-    "socket.io": "^4.7.2"
-  }
+    "socket.io": "^4.7.2",
+    "winston": "^3.10.0"
+  },
+  "description": ""
 }

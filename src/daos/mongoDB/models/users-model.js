@@ -11,6 +11,7 @@ const usersSchema = new mongoose.Schema({
   role: { type: String, required: false },
   cart: { type: mongoose.Schema.Types.ObjectId, ref: cartsModel },
   isGoogle: { type: Boolean, required: false, default: false },
+  premium: { type: Boolean, required: true, default: false },
 });
 
 usersSchema.pre('save', async function (next) {

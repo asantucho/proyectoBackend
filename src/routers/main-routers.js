@@ -5,6 +5,7 @@ import currentRouter from './sessions-router.js';
 import cartRouter from './carts-router.js';
 import messagesRouter from './messages-router.js';
 import viewsRouter from './views-router.js';
+import mockProductRouter from './mockProducts-router.js';
 
 const mainRouter = Router();
 
@@ -14,5 +15,6 @@ mainRouter.use('/sessions', currentRouter);
 mainRouter.use('/carts', cartRouter);
 mainRouter.use('/messages', messagesRouter);
 mainRouter.use('/views', viewsRouter);
+mainRouter.use('/mockingproducts', mockProductRouter);
 
 export default mainRouter;

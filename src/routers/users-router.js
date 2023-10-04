@@ -13,6 +13,23 @@ userRouter.get(
   passport.authenticate('jwtCookies'),
   userController.profile
 );
+
+userRouter.post(
+  '/forgot-password',
+  passport.authenticate('jwtCookies', { session: false }),
+  userController.forgotPassword
+);
+userRouter.post(
+  '/reset-password',
+  passport.authenticate('jwtCookies', { session: false }),
+  userController.resetPassword
+);
+userRouter.post(
+  '/generate-reset-link',
+  passport.authenticate('jwtCookies', { session: false }),
+  userController.generateResetLink
+);
+
 userRouter.get('/:email', userController.getByEmail);
 
 userRouter.get('/', userController.getAll);

@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { __dirname } from '../path.js';
+import { __dirname } from '../../utils/utils.js';
 import { getProductsById } from './productManager.js';
 
 const pathFile = __dirname + '/carts.json';

@@ -24,8 +24,6 @@ const cookieStrategyOptions = {
 
 const verifyToken = async (jwt_payload, done) => {
   try {
-    console.log('Verifying token...');
-    console.log('JWT Payload:', jwt_payload);
     const user = await userManager.getById(jwt_payload.userId);
     console.log('user en verifyToken: ', user);
     if (!user) return done(null, false);

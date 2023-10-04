@@ -11,6 +11,7 @@ const productsSchema = new mongoose.Schema({
   code: { type: Number, required: true },
   status: { type: Boolean, default: true },
   category: { type: String, required: true },
+  owner: { type: String, required: true, default: 'admin' },
 });
 
 export const productsModel = mongoose.model(productsCollection, productsSchema);

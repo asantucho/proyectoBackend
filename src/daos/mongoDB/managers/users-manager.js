@@ -1,57 +1,62 @@
 import { usersModel } from '../models/users-model.js';
 import MainClass from '../main-class.js';
-import { createHash, isValidPassword } from '../../../utils.js';
+import { createHash, isValidPassword } from '../../../utils/utils.js';
 import jwt from 'jsonwebtoken';
-import 'dotenv/config';
+import { developmentLogger, productionLogger } from '../../../utils/loggers.js';
+import config from '../../../config/config.js';
 
-const SECRET_KEY = process.env.SECRET_KEY;
+const SECRET_KEY = config.SECRET_KEY;
 
 export default class UserManager extends MainClass {
   constructor() {
-    console.log('UserManager constructor called');
     super(usersModel);
   }
   #generateToken(user) {
     if (!SECRET_KEY) {
-      console.log('Error: SECRET_KEY is not set.');
+      if (config.ENV === 'PROD') {
+        productionLogger.error("'Error: SECRET_KEY is not set.'");
+      } else {
+        developmentLogger.error('Error: SECRET_KEY is not set.');
+      }
       return;
     }
     try {
-      console.log('generate Token user', user);
       const payload = {
         userId: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
       };
-      console.log('generateToken payload:', payload);
       const token = jwt.sign(payload, SECRET_KEY, {
         expiresIn: '10m',
       });
       return token;
     } catch (error) {
-      console.log('error en generateToken: ', error);
+      if (config.ENV === 'PROD') {
+        productionLogger.error("'Error: could not generate token.'");
+      } else {
+        developmentLogger.error('Error: could not generate token.');
+      }
     }
   }
   getByEmail = async (email) => {
     try {
-      console.log('getByEmail called with email:', email);
       const existingUser = await this.model.findOne({ email }).exec();
-      console.log('existingUser: ', existingUser);
       if (existingUser) {
         return existingUser;
       } else return false;
     } catch (error) {
-      console.log('error en el user-manager(getByEmail)', error);
+      if (config.ENV === 'PROD') {
+        productionLogger.error('Error: could not find the user.');
+      } else {
+        developmentLogger.error('Error: could not find the user.');
+      }
     }
   };
   register = async (user) => {
     try {
-      console.log('user que recibe el register: ', user);
       const { email, password } = user;
-      console.log('Register method called with user:', user);
       const registeredUser = await this.getByEmail(email);
-      console.log('Registered user:', registeredUser);
       if (!registeredUser) {
         if (email === 'adminCoder@coder.com' && password === 'adminCoder123') {
           const newUser = await usersModel.create({
@@ -69,13 +74,14 @@ export default class UserManager extends MainClass {
           return newUser;
         }
       }
-      console.log('newUser: ', newUser);
       const token = this.#generateToken(newUser);
-      console.log('Token generated:', token);
-      console.log('paso exitosamente el dao');
       return token;
     } catch (error) {
-      console.log('error en el user-manager(register):', error);
+      if (config.ENV === 'PROD') {
+        productionLogger.error('Error: could not register the user');
+      } else {
+        developmentLogger.error('Error: could not register the user');
+      }
     }
   };
   login = async (user) => {
@@ -91,7 +97,11 @@ export default class UserManager extends MainClass {
         }
       }
     } catch (error) {
-      console.log('error en el manager', error);
+      if (config.ENV === 'PROD') {
+        productionLogger.error('Error: could not login');
+      } else {
+        developmentLogger.error('Error: could not login');
+      }
     }
   };
   profile = async (token) => {
@@ -105,7 +115,11 @@ export default class UserManager extends MainClass {
         throw new Error('User not found');
       }
     } catch (error) {
-      console.log(error);
+      if (config.ENV === 'PROD') {
+        productionLogger.error('Error: could not get the profile');
+      } else {
+        developmentLogger.error('Error: could not get the profile');
+      }
     }
   };
 }
